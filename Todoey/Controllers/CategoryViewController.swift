@@ -12,14 +12,12 @@ class CategoryViewController: UITableViewController {
 
     let realm = try! Realm()
     
-    var categoryArray = [Category]()
-
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var categories: Results<Category>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        loadCategories()
+        loadCategories()
 
     }
     //MARK: - Add New Categories
@@ -31,8 +29,6 @@ class CategoryViewController: UITableViewController {
             if textfield.text != "" {
                 let newCategory = Category()
                 newCategory.name = textfield.text!
-                
-                self.categoryArray.append(newCategory)
                 
                 self.saveCategories(category: newCategory)
             }
@@ -53,14 +49,14 @@ class CategoryViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
         
-        let category = categoryArray[indexPath.row].name
+        let category = categories?[indexPath.row].name ?? "No Categories Added Yet"
         cell.textLabel?.text = category
         return cell
     }
     //MARK: - TableView Delegate Methods
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return categoryArray.count
+        return categories?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -75,7 +71,7 @@ class CategoryViewController: UITableViewController {
         
         if segue.identifier == "goToItems"{
             if let indexPath = tableView.indexPathForSelectedRow {
-                destinationVC.selectedCategory = categoryArray[indexPath.row]
+                destinationVC.selectedCategory = categories?[indexPath.row]
             } //
         }
         
@@ -92,14 +88,12 @@ class CategoryViewController: UITableViewController {
         tableView.reloadData()
     }
     
-//    func loadCategories(with request: NSFetchRequest<Category> = Category.fetchRequest()){
-//        do{
-//            categoryArray = try context.fetch(request)
-//        }catch{
-//            print("Error fetching data from context \(error)")
-//        }
-//        tableView.reloadData()
-//    }
+    func loadCategories(){
+   
+        categories = realm.objects(Category.self)
+        
+        tableView.reloadData()
+    }
     
 
 }
