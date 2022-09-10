@@ -4,8 +4,8 @@ This is my tutorial app where i used CoreData,Realm
 * Swift
   * UIKit
 * Core Data
-You can check in main branch
+  - You can check in main branch
 * Realm
-You can check in realm branch
+  - You can check in realm branch
 * Cocoapods
-For Realm
+  - For Realm
